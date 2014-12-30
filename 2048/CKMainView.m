@@ -204,27 +204,31 @@ typedef NS_ENUM(NSUInteger, CKDirection) {
 
 
     NSRect finalFrame = [self cellFrameAtRow:[loc row] column:[loc column]];
-    NSRect initialFrame = CKContractRectByOffset(finalFrame, (double)finalFrame.size.width * 10 / 100);
 
+
+    NSRect initialFrame = CKCenterRect(finalFrame);
     CKCellView *cell = [[CKCellView alloc] initWithFrame:initialFrame];
-    cell.color = 2;
+    cell.value = 2;
+    cell.color = 1;
     [self addSubview:cell];
 
     [_cells setValue:cell atRow:[loc row] column:[loc column]];
 
-
-
-    [NSAnimationContext beginGrouping];
-
-    [NSAnimationContext currentContext].timingFunction = [CAMediaTimingFunction
-            functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    [NSAnimationContext currentContext].duration = 0.01;
-
-    [[cell animator] setFrame: finalFrame];
-
-    [NSAnimationContext endGrouping];
-
-
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        
+        context.duration = 0.07;
+        context.timingFunction = [CAMediaTimingFunction
+                                    functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+   
+       
+        [[cell animator] setFrame:finalFrame];
+        
+        
+    } completionHandler:^{
+        [cell setFrame:finalFrame];
+        [cell setNeedsDisplay:YES];
+        
+    }];
     return YES;
 }
 

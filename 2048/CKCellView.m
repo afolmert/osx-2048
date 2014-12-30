@@ -10,9 +10,10 @@
 #import "CKUtils.h"
 #import "CKPalette.h"
 
+static const NSUInteger kCKInitialFontSize = 40;
+
 @implementation CKCellView
 {
-    NSMutableDictionary *_textAttributes;
     CKPalette *_palette;
 }
 
@@ -23,7 +24,6 @@
         _color = 1;
         _value = 2;
 
-        _textAttributes = [self initializeTextAttributes];
         _palette = [CKPalette new];
     }
     
@@ -33,7 +33,7 @@
 - (NSMutableDictionary *)initializeTextAttributes
 {
     NSMutableDictionary *result = [NSMutableDictionary new];
-    result[NSFontAttributeName] = [NSFont fontWithName:@"Courier" size:40];
+    result[NSFontAttributeName] = [NSFont fontWithName:@"Courier" size:kCKInitialFontSize];
     result[NSForegroundColorAttributeName] = [NSColor blackColor];
 
     return result;
@@ -56,15 +56,16 @@
 
 - (void)drawTextInCenter:(NSString *)text
 {
-    NSSize size = [text sizeWithAttributes:_textAttributes];
+    NSMutableDictionary *textAttributes = [self initializeTextAttributes];
+    NSSize size = [text sizeWithAttributes:textAttributes];
 
 
     NSRect bounds = [self bounds];
 
     // adjust font size 
     while (size.width > bounds.size.width || size.height > bounds.size.height) {
-        [self increaseTextAttributesFontSize:_textAttributes byPoints:-1];
-        size = [text sizeWithAttributes:_textAttributes];
+        [self increaseTextAttributesFontSize:textAttributes byPoints:-1];
+        size = [text sizeWithAttributes:textAttributes];
     }
 
     
@@ -73,7 +74,8 @@
     origin.x = (bounds.size.width - size.width) / 2;
     origin.y = (bounds.size.height - size.height) / 2;
 
-    [text drawAtPoint:origin withAttributes:_textAttributes];
+
+    [text drawAtPoint:origin withAttributes:textAttributes];
 }
 
 - (void)drawRect:(NSRect)dirtyRect

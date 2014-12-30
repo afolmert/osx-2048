@@ -17,6 +17,6 @@
 
 @end
 
-
+NSRect CKCenterRect(NSRect rect);
 NSColor *CKGetPaletteColor(int color);
 NSRect CKContractRectByOffset(NSRect rect, double offset);

@@ -12,6 +12,18 @@
 
 @end
 
+NSRect CKCenterRect(NSRect rect)
+{
+    double xoffset = rect.size.width / 2 - 1;
+    double yoffset = rect.size.height / 2 - 1;
+    
+    rect.origin.x = rect.origin.x + xoffset;
+    rect.origin.y = rect.origin.y + yoffset;
+    rect.size.width = rect.size.width - xoffset * 2;
+    rect.size.height = rect.size.height - yoffset * 2;
+    
+    return rect;
+}
 
 NSRect CKContractRectByOffset(NSRect rect, double offset)
 {
